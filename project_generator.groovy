@@ -130,7 +130,7 @@ class Generator {
 				 archives javadocJar
 			}
 
-			publishToSonatype {
+			uploadArchives {
 				repositories.mavenDeployer {
 					configuration = configurations.archives
 
@@ -215,8 +215,8 @@ class Application {
 
 	void createFolders(String group){
 		def f = group.replaceAll(/\./, '/')
-		new File("src/main/${f}").mkdirs()
-		new File("src/test/${f}").mkdirs()
+		new File("src/main/groovy/${f}").mkdirs()
+		new File("src/test/groovy/${f}").mkdirs()
 	}
 
 	void run(){
@@ -225,7 +225,7 @@ class Application {
 
 		First of all:
 		1) Generate and distribute a PGP file [link: http://www.sonatype.com/people/2010/01/how-to-generate-pgp-signatures-with-maven/]
-		2) Sign up on http://issues.sonatype.org, Create an issue for your new project [link: 'how to']
+		2) Sign up on http://issues.sonatype.org, Create an issue for your new project [link: 'https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide']
 		3) Create a file: HOME_DIR/.gradle/gradle.properties
 		4) Add 4 properties to gradle.properties: your PGP key id, PGP key password, sonatype username and sonatype password
 		5) Create a repository for your project on GitHub
@@ -236,6 +236,16 @@ class Application {
 		Map props = askQuestions()
 		createBuildGradle props
 		createFolders props.group
+
+		println """
+		The project has been generated.
+
+		To publish it:
+		1) gradle uploadArchives
+		2) Go to http://oss.sonatype.org
+		3) Close your staging repository and release it
+		""".stripIndent()
+
 	}
 }
 
